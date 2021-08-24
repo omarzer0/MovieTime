@@ -10,4 +10,18 @@
         android:name="az.zero.movietime.ui.home.HomeFragment"
         android:label="Movie Time"
         tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="az.zero.movietime.ui.details.DetailsFragment"
+        android:label="{movieTitle}"
+        tools:layout="@layout/fragment_details">
+        <argument
+            android:name="movie"
+            app:argType="az.zero.movietime.data.Movie" />
+        <argument android:name="movieTitle" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_detailsFragment"
+        app:destination="@id/detailsFragment"
+        app:popUpTo="@id/homeFragment" />
 </navigation>

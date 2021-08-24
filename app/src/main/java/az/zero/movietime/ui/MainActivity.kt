@@ -12,6 +12,7 @@ import androidx.navigation.ui.setupWithNavController
 import az.zero.movietime.R
 import az.zero.movietime.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -23,6 +24,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        Locale.setDefault(Locale("en", "US"))
 
         setSupportActionBar(binding.toolbar)
         val navHostFragment =

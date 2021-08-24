@@ -30,18 +30,29 @@ class MovieAdapter : PagingDataAdapter<Movie, MovieAdapter.MovieViewHolder>(COMP
     inner class MovieViewHolder(private val binding: ItemMovieBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+        init {
+            binding.root.setOnClickListener {
+                val clickedMovie = getItem(bindingAdapterPosition)
+                clickedMovie?.let { onMovieClickListener?.let { it(clickedMovie) } }
+            }
+        }
 
         fun bind(currentItem: Movie) {
             binding.apply {
                 tvMovieName.text = currentItem.title
                 tvReleaseDate.text = currentItem.getReleaseDateYear()
-                tvRatingNumber.text = "${currentItem.vote_average}"
+                tvRatingNumber.text = "${currentItem.voteAverageWithOneDecimalPlace}"
                 Glide.with(itemView).load(currentItem.moviePoster)
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .into(ivMoviePoster)
             }
         }
 
+    }
+
+    private var onMovieClickListener: ((Movie) -> Unit)? = null
+    fun setOnMovieClickListener(listener: (Movie) -> Unit) {
+        onMovieClickListener = listener
     }
 
     companion object {
