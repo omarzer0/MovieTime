@@ -31,4 +31,21 @@ interface MovieApi {
         @Query("api_key") api_key: String,
         @Query("page") page: Int
     ): Response
+
+    @GET("movie/{movie_id}/similar")
+    suspend fun getSimilarMovies(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") api_key: String,
+        @Query("page") page: Int
+    ): Response
+
+    @GET("movie/{movie_id}/recommendations")
+    suspend fun getRecommendedMovie(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") api_key: String,
+        @Query("page") page: Int
+    ): Response
 }
+
+// https://api.themoviedb.org/3/movie/150689/recommendations?api_key=49066942591aa4286806177d1fc935a0&page=1
+// https://api.themoviedb.org/3/movie/150689/recommendations?api_key=49066942591aa4286806177d1fc935a0&page=1

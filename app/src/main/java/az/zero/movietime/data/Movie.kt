@@ -3,6 +3,7 @@ package az.zero.movietime.data
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
+import java.text.DecimalFormat
 
 @Parcelize
 data class Movie(
@@ -22,14 +23,19 @@ data class Movie(
     @SerializedName("vote_average") val vote_average: Double
 ) : Parcelable {
     val moviePoster get() = "https://image.tmdb.org/t/p/w500/$poster_path"
+    val movieBackPoster get() = "https://image.tmdb.org/t/p/w500/$backdrop_path"
+    val voteAverageWithOneDecimalPlace get() = DecimalFormat("#.#").format(vote_average).toDouble()
     fun getReleaseDateYear(): String {
         return when {
-            release_date == null -> ""
-            release_date.length < 4 -> ""
+            release_date == null -> "UnKnown"
+            release_date.length < 4 -> "UnKnown"
             else -> release_date.slice(0..3)
         }
-
     }
 
+
+    //// toString can be used in nav_graph to set the movie title to appbar text
+    //// instead of passing another parameter (movie title)
+    //override fun toString(): String = title
 }
 

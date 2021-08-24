@@ -1,20 +1,24 @@
 package az.zero.movietime.ui.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
+import az.zero.movietime.NavGraphDirections
 import az.zero.movietime.R
 import az.zero.movietime.adapter.MovieAdapter
 import az.zero.movietime.api.MovieLoadStateAdapter
 import az.zero.movietime.databinding.FragmentHomeBinding
 import az.zero.movietime.utils.LOADING_ITEM
 import az.zero.movietime.utils.NO_INTERNET
+import az.zero.movietime.utils.exhaustive
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
@@ -51,7 +55,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         viewModel.movies.observe(viewLifecycleOwner) { movies ->
             movieAdapter.submitData(viewLifecycleOwner.lifecycle, movies)
-            Log.e("TAG", "observer called")
+        }
+
+        movieAdapter.setOnMovieClickListener { movie ->
+            viewModel.movieItemClicked(movie)
         }
 
         movieAdapter.addLoadStateListener { loadState ->
@@ -70,5 +77,23 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             }
         }
 
+
+        collectMovieEvents()
+    }
+
+    private fun collectMovieEvents() {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.movieEvent.collect { event ->
+                when (event) {
+                    is HomeFragmentEvents.NavigateToDetailsFragmentWithMovie -> {
+                        val action = NavGraphDirections.actionGlobalDetailsFragment(
+                            event.movie,
+                            event.movie.title
+                        )
+                        findNavController().navigate(action)
+                    }
+                }.exhaustive
+            }
+        }
     }
 }
