@@ -39,8 +39,8 @@ class MovieAdapter : PagingDataAdapter<Movie, MovieAdapter.MovieViewHolder>(COMP
 
         fun bind(currentItem: Movie) {
             binding.apply {
-                tvMovieName.text = currentItem.title
-                tvReleaseDate.text = currentItem.getReleaseDateYear()
+                tvMovieName.text = currentItem.showTitle
+                tvReleaseDate.text = currentItem.getTheYearOfReleaseDateYear()
                 tvRatingNumber.text = "${currentItem.voteAverageWithOneDecimalPlace}"
                 Glide.with(itemView).load(currentItem.moviePoster)
                     .transition(DrawableTransitionOptions.withCrossFade())

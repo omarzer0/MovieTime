@@ -31,6 +31,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         binding = FragmentHomeBinding.bind(view)
 
 
+        viewModel.getShows()
         movieAdapter = MovieAdapter()
         val gridLayoutManager = GridLayoutManager(requireContext(), 4)
         gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
@@ -53,7 +54,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         binding.buttonRetry.setOnClickListener { movieAdapter.retry() }
 
 
-        viewModel.movies.observe(viewLifecycleOwner) { movies ->
+        viewModel.shows.observe(viewLifecycleOwner) { movies ->
             movieAdapter.submitData(viewLifecycleOwner.lifecycle, movies)
         }
 
@@ -88,7 +89,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     is HomeFragmentEvents.NavigateToDetailsFragmentWithMovie -> {
                         val action = NavGraphDirections.actionGlobalDetailsFragment(
                             event.movie,
-                            event.movie.title
+                            event.movie.showTitle,
+                            event.showType
                         )
                         findNavController().navigate(action)
                     }

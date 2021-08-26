@@ -1,6 +1,7 @@
 package az.zero.movietime.ui.details
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -91,6 +92,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
         }
 
         viewModel.relatedMovies.observe(viewLifecycleOwner) { movies ->
+            Log.e("TAG", "observeData: $movies")
             relatedAdapter.submitData(viewLifecycleOwner.lifecycle, movies)
         }
     }
@@ -98,16 +100,19 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
     private fun populateViews(binding: FragmentDetailsBinding, movie: Movie) {
 
         binding.apply {
-            tvTitle.text = movie.title
-            tvDetailsReleaseDate.text = movie.getReleaseDateYear()
+            tvTitle.text = movie.showTitle
+            tvDetailsReleaseDate.text = movie.getTheYearOfReleaseDateYear()
             tvDetailsRatingNumber.text = "${movie.voteAverageWithOneDecimalPlace}/10"
-            tvOverView.text = movie.overview
+            tvOverView.text = movie.descriptionOrEmpty
 
-            tvReleaseDate.text =
-                if (movie.release_date == null) "Unknown" else "${movie.release_date}"
+            tvReleaseDate.text = movie.fullReleaseDate
             tvIsAdult.text = if (movie.adult) "Yes" else "No"
             tvVotesNumber.text = "${movie.vote_count}"
 
+            if (movie.title == null) {
+                tvAdult.visibility = View.GONE
+                tvIsAdult.visibility = View.GONE
+            }
             Glide.with(requireContext()).load(movie.moviePoster).into(ivSmallPosterImage)
             Glide.with(requireContext()).load(movie.movieBackPoster).into(ivBackPosterImage)
         }
@@ -120,7 +125,8 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
                     is DetailsFragmentEvents.NavigateToDetailsFragmentWithMovie -> {
                         val action = NavGraphDirections.actionGlobalDetailsFragment(
                             event.movie,
-                            event.movie.title
+                            event.movie.showTitle,
+                            event.showType
                         )
                         findNavController().navigate(action)
                     }

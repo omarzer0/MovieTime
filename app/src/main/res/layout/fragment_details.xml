@@ -133,11 +133,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:layout_marginEnd="8dp"
                     android:text="@string/for_adults"
                     android:textColor="@color/text_main_color"
                     android:textSize="16sp"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_votes"
+                    app:layout_constraintStart_toEndOf="@+id/tv_popularity"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
@@ -159,10 +159,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:text="@string/total_votes"
+                    android:layout_marginEnd="8dp"
                     android:textColor="@color/text_main_color"
                     android:textSize="16sp"
-                    app:layout_constraintEnd_toStartOf="@+id/tv_adult"
-                    app:layout_constraintStart_toEndOf="@+id/tv_popularity"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
@@ -181,16 +181,16 @@
                     android:id="@+id/tv_over_view"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp"
                     android:background="@color/card_bg_color"
                     android:fontFamily="sans-serif"
                     android:textColor="@color/text_main_color"
                     android:textSize="16sp"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginBottom="32dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/tv_adult"
+                    app:layout_constraintEnd_toEndOf="@+id/tv_votes"
                     app:layout_constraintStart_toStartOf="@+id/tv_popularity"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_votes_number"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_release_date"
                     tools:text="overview asdsa das asdasd asd adasd  " />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

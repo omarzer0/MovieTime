@@ -7,41 +7,53 @@ import retrofit2.http.Query
 
 interface MovieApi {
 
-    @GET("movie/popular")
+    @GET("{movieOrTV}/popular")
     suspend fun getPopularMovies(
-//        @Path("movieOrTV") movieOrTV: String,
+        @Path("movieOrTV") movieOrTV: String,
         @Query("api_key") api_key: String,
         @Query("page") page: Int
     ): Response
 
-    @GET("movie/top_rated")
+    @GET("{movieOrTV}/top_rated")
     suspend fun getTopRatedMovies(
+        @Path("movieOrTV") movieOrTV: String,
         @Query("api_key") api_key: String,
         @Query("page") page: Int
     ): Response
 
-    @GET("trending/movie/week")
+    @GET("trending/{movieOrTV}/week")
     suspend fun getTrendingMovies(
+        @Path("movieOrTV") movieOrTV: String,
         @Query("api_key") api_key: String,
         @Query("page") page: Int
     ): Response
 
-    @GET("discover/movie")
-    suspend fun getDiscoverMovies(
+    @GET("movie/upcoming")
+    suspend fun getUpcomingMovies(
         @Query("api_key") api_key: String,
         @Query("page") page: Int
     ): Response
 
-    @GET("movie/{movie_id}/similar")
+    @GET("tv/airing_today")
+    suspend fun getAiringTodayTV(
+        @Query("api_key") api_key: String,
+        @Query("page") page: Int
+    ): Response
+
+
+    // movie item dependent
+    @GET("{movieOrTV}/{show_id}/similar")
     suspend fun getSimilarMovies(
-        @Path("movie_id") movieId: Int,
+        @Path("movieOrTV") movieOrTV: String,
+        @Path("show_id") showId: Int,
         @Query("api_key") api_key: String,
         @Query("page") page: Int
     ): Response
 
-    @GET("movie/{movie_id}/recommendations")
+    @GET("{movieOrTV}/{show_id}/recommendations")
     suspend fun getRecommendedMovie(
-        @Path("movie_id") movieId: Int,
+        @Path("movieOrTV") movieOrTV: String,
+        @Path("show_id") showId: Int,
         @Query("api_key") api_key: String,
         @Query("page") page: Int
     ): Response

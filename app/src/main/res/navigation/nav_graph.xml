@@ -9,7 +9,14 @@
         android:id="@+id/homeFragment"
         android:name="az.zero.movietime.ui.home.HomeFragment"
         android:label="Movie Time"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <argument
+            android:name="showType"
+            app:argType="az.zero.movietime.utils.ShowType" />
+        <argument
+            android:name="methodToCall"
+            app:argType="az.zero.movietime.utils.MethodToCall" />
+    </fragment>
     <fragment
         android:id="@+id/detailsFragment"
         android:name="az.zero.movietime.ui.details.DetailsFragment"
@@ -19,9 +26,16 @@
             android:name="movie"
             app:argType="az.zero.movietime.data.Movie" />
         <argument android:name="movieTitle" />
+        <argument
+            android:name="showType"
+            app:argType="az.zero.movietime.utils.ShowType" />
     </fragment>
     <action
         android:id="@+id/action_global_detailsFragment"
-        app:destination="@id/detailsFragment"
+        app:destination="@id/detailsFragment" />
+    <action
+        android:id="@+id/action_global_homeFragment"
+        app:destination="@id/homeFragment"
+        app:launchSingleTop="true"
         app:popUpTo="@id/homeFragment" />
 </navigation>

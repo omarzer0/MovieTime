@@ -6,8 +6,8 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.MainActivity">
-
+    tools:context=".ui.MainActivity"
+    tools:openDrawer="start">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -38,8 +38,14 @@
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_drawer_slider"
+        style="@style/NavigationView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:background="@color/app_main_color"
+        app:headerLayout="@layout/nav_header"
+        app:itemBackground="@drawable/drawer_selected_item_bg"
+        app:itemIconTint="@color/text_main_color"
+        app:itemTextColor="@color/text_main_color"
         app:menu="@menu/drawer_menu" />
 </androidx.drawerlayout.widget.DrawerLayout>

@@ -6,3 +6,8 @@ const val TAB_NUMBER = "tab number"
 
 const val LOADING_ITEM = 0
 const val NO_INTERNET = 1
+
+const val SHOW_TYPE= "showType"
+const val METHOD_TO_CALL= "methodToCall"
+
+const val UNKNOWN =  "UnKnown"
