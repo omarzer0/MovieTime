@@ -5,24 +5,24 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface MovieApi {
+interface ShowApi {
 
     @GET("{movieOrTV}/popular")
-    suspend fun getPopularMovies(
+    suspend fun getPopularShows(
         @Path("movieOrTV") movieOrTV: String,
         @Query("api_key") api_key: String,
         @Query("page") page: Int
     ): Response
 
     @GET("{movieOrTV}/top_rated")
-    suspend fun getTopRatedMovies(
+    suspend fun getTopRatedShows(
         @Path("movieOrTV") movieOrTV: String,
         @Query("api_key") api_key: String,
         @Query("page") page: Int
     ): Response
 
     @GET("trending/{movieOrTV}/week")
-    suspend fun getTrendingMovies(
+    suspend fun getTrendingShows(
         @Path("movieOrTV") movieOrTV: String,
         @Query("api_key") api_key: String,
         @Query("page") page: Int
@@ -43,7 +43,7 @@ interface MovieApi {
 
     // movie item dependent
     @GET("{movieOrTV}/{show_id}/similar")
-    suspend fun getSimilarMovies(
+    suspend fun getSimilarShows(
         @Path("movieOrTV") movieOrTV: String,
         @Path("show_id") showId: Int,
         @Query("api_key") api_key: String,
@@ -51,7 +51,7 @@ interface MovieApi {
     ): Response
 
     @GET("{movieOrTV}/{show_id}/recommendations")
-    suspend fun getRecommendedMovie(
+    suspend fun getRecommendedShows(
         @Path("movieOrTV") movieOrTV: String,
         @Path("show_id") showId: Int,
         @Query("api_key") api_key: String,

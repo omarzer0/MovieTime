@@ -20,12 +20,13 @@
     <fragment
         android:id="@+id/detailsFragment"
         android:name="az.zero.movietime.ui.details.DetailsFragment"
-        android:label="{movieTitle}"
+        android:label="{showTitle}"
         tools:layout="@layout/fragment_details">
         <argument
-            android:name="movie"
-            app:argType="az.zero.movietime.data.Movie" />
-        <argument android:name="movieTitle" />
+            android:name="show"
+            app:argType="az.zero.movietime.data.Show" />
+        <argument android:name="showTitle"
+            app:argType="string" />
         <argument
             android:name="showType"
             app:argType="az.zero.movietime.utils.ShowType" />

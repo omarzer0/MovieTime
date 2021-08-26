@@ -6,9 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import az.zero.movietime.data.Movie
-import az.zero.movietime.repository.MovieRepository
+import az.zero.movietime.data.Show
+import az.zero.movietime.repository.ShowRepository
 import az.zero.movietime.utils.MethodToCall
+import az.zero.movietime.utils.SHOW
 import az.zero.movietime.utils.SHOW_TYPE
 import az.zero.movietime.utils.ShowType
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,32 +20,32 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailsViewModel @Inject constructor(
-    private val movieRepository: MovieRepository,
+    private val showRepository: ShowRepository,
     private val state: SavedStateHandle
 ) : ViewModel() {
 
-    private val movieEventChannel = Channel<DetailsFragmentEvents>()
-    val movieEvent = movieEventChannel.receiveAsFlow()
+    private val showEventChannel = Channel<DetailsFragmentEvents>()
+    val showEvent = showEventChannel.receiveAsFlow()
 
-    var movie = state.get<Movie>("movie")
+    var show = state.get<Show>(SHOW)
     var showType = state.get<ShowType>(SHOW_TYPE) ?: ShowType.TV
 
-    lateinit var similarMovies: LiveData<PagingData<Movie>>
-    fun getSimilarMovies(movieId: Int) {
-        similarMovies = movieRepository.getShows(MethodToCall.GET_SIMILAR, showType, movieId)
+    lateinit var similarMovies: LiveData<PagingData<Show>>
+    fun getSimilarShows(movieId: Int) {
+        similarMovies = showRepository.getShows(MethodToCall.GET_SIMILAR, showType, movieId)
             .cachedIn(viewModelScope)
     }
 
-    lateinit var relatedMovies: LiveData<PagingData<Movie>>
-    fun getRecommendedMovies(movieId: Int) {
-        relatedMovies = movieRepository.getShows(MethodToCall.GET_RECOMMENDED, showType, movieId)
+    lateinit var relatedMovies: LiveData<PagingData<Show>>
+    fun getRecommendedShows(movieId: Int) {
+        relatedMovies = showRepository.getShows(MethodToCall.GET_RECOMMENDED, showType, movieId)
             .cachedIn(viewModelScope)
     }
 
-    fun movieItemClicked(movie: Movie) = viewModelScope.launch {
-        movieEventChannel.send(
-            DetailsFragmentEvents.NavigateToDetailsFragmentWithMovie(
-                movie,
+    fun showItemClicked(show: Show) = viewModelScope.launch {
+        showEventChannel.send(
+            DetailsFragmentEvents.NavigateToDetailsFragmentWithShow(
+                show,
                 showType
             )
         )

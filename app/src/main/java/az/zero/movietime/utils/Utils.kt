@@ -15,13 +15,6 @@ import android.view.MenuItem
 val <T> T.exhaustive: T
     get() = this
 
-val tabsName = listOf(
-    "POPULAR",
-    "TOP RATED",
-    "ON TV",
-    "AIRING TODAY"
-)
-
 /**
  * changes drawer title style for group of items to specific style
  * */

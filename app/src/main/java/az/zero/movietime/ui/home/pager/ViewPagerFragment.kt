@@ -5,7 +5,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import az.zero.movietime.R
-import az.zero.movietime.adapter.MovieAdapter
+import az.zero.movietime.adapter.ShowAdapter
 import az.zero.movietime.databinding.FragmentViewPagerBinding
 import az.zero.movietime.ui.home.HomeFragmentViewModel
 import az.zero.movietime.utils.TAB_NUMBER
@@ -15,7 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class ViewPagerFragment : Fragment(R.layout.fragment_view_pager) {
     private val viewModel: HomeFragmentViewModel by viewModels()
     private lateinit var binding: FragmentViewPagerBinding
-    private lateinit var movieAdapter: MovieAdapter
+    private lateinit var showAdapter: ShowAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -1,7 +1,6 @@
 package az.zero.movietime.ui
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -13,6 +12,7 @@ import androidx.navigation.ui.setupWithNavController
 import az.zero.movietime.NavGraphDirections
 import az.zero.movietime.R
 import az.zero.movietime.databinding.ActivityMainBinding
+import az.zero.movietime.ui.home.HomeFragment
 import az.zero.movietime.utils.MethodToCall
 import az.zero.movietime.utils.ShowType
 import az.zero.movietime.utils.changeTitleTextStyle
@@ -42,6 +42,7 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarrConfiguration)
         binding.navDrawerSlider.setupWithNavController(navController)
 
+        binding.navDrawerSlider.setCheckedItem(R.id.movie_popular_menu_item)
         binding.navDrawerSlider.setNavigationItemSelectedListener { menuItem ->
             val showType: ShowType
             val methodToCall: MethodToCall
@@ -89,8 +90,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            Log.e("TAG", "onCreate: $showType" )
-            Log.e("TAG", "onCreate: $methodToCall" )
             val action = NavGraphDirections.actionGlobalHomeFragment(
                 showType,
                 methodToCall

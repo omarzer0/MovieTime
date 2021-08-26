@@ -7,7 +7,7 @@ import kotlinx.parcelize.Parcelize
 import java.text.DecimalFormat
 
 @Parcelize
-data class Movie(
+data class Show(
     @SerializedName("poster_path") val poster_path: String,
     @SerializedName("adult") val adult: Boolean,
     @SerializedName("overview") val overview: String,
@@ -25,8 +25,8 @@ data class Movie(
     @SerializedName("video") val video: Boolean,
     @SerializedName("vote_average") val vote_average: Double
 ) : Parcelable {
-    val moviePoster get() = "https://image.tmdb.org/t/p/w500/$poster_path"
-    val movieBackPoster get() = "https://image.tmdb.org/t/p/w500/$backdrop_path"
+    val showPoster get() = "https://image.tmdb.org/t/p/w500/$poster_path"
+    val showBackPoster get() = "https://image.tmdb.org/t/p/w500/$backdrop_path"
     val voteAverageWithOneDecimalPlace get() = DecimalFormat("#.#").format(vote_average).toDouble()
     val fullReleaseDate get() = release_date ?: first_air_date ?: UNKNOWN
     val showTitle get() = title ?: name ?: UNKNOWN

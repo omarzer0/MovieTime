@@ -11,3 +11,5 @@ const val SHOW_TYPE= "showType"
 const val METHOD_TO_CALL= "methodToCall"
 
 const val UNKNOWN =  "UnKnown"
+
+const val SHOW = "show"
