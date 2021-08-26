@@ -12,7 +12,6 @@ import androidx.navigation.ui.setupWithNavController
 import az.zero.movietime.NavGraphDirections
 import az.zero.movietime.R
 import az.zero.movietime.databinding.ActivityMainBinding
-import az.zero.movietime.ui.home.HomeFragment
 import az.zero.movietime.utils.MethodToCall
 import az.zero.movietime.utils.ShowType
 import az.zero.movietime.utils.changeTitleTextStyle

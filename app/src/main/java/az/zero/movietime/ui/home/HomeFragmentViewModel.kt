@@ -1,16 +1,18 @@
 package az.zero.movietime.ui.home
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
+import androidx.lifecycle.*
 import androidx.paging.cachedIn
 import az.zero.movietime.data.Show
 import az.zero.movietime.repository.ShowRepository
-import az.zero.movietime.utils.*
+import az.zero.movietime.utils.METHOD_TO_CALL
+import az.zero.movietime.utils.MethodToCall
+import az.zero.movietime.utils.SHOW_TYPE
+import az.zero.movietime.utils.ShowType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,29 +24,27 @@ class HomeFragmentViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-    private var methodToCall = state.get<MethodToCall>(METHOD_TO_CALL) ?: MethodToCall.GET_POPULAR
-    private var showType = state.get<ShowType>(SHOW_TYPE) ?: ShowType.MOVIE
+    private val methodToCall = state.getLiveData(METHOD_TO_CALL, MethodToCall.GET_POPULAR)
+    private val showType = state.getLiveData(SHOW_TYPE, ShowType.MOVIE)
 
-    lateinit var shows: LiveData<PagingData<Show>>
-    fun getShows() {
-        shows = when (methodToCall) {
-            MethodToCall.TOP_RATED -> showRepository.getShows(MethodToCall.TOP_RATED, showType).cachedIn(viewModelScope)
-            MethodToCall.TRENDING -> showRepository.getShows(MethodToCall.TRENDING, showType).cachedIn(viewModelScope)
-            MethodToCall.UPCOMING -> showRepository.getShows(MethodToCall.UPCOMING, showType).cachedIn(viewModelScope)
-            MethodToCall.AIRING_TODAY ->showRepository.getShows(MethodToCall.AIRING_TODAY, showType).cachedIn(viewModelScope)
-            else -> showRepository.getShows(MethodToCall.GET_POPULAR, showType).cachedIn(viewModelScope)
-        }.exhaustive
+    @ExperimentalCoroutinesApi
+    val showsFlow = combine(methodToCall.asFlow(), showType.asFlow()) { methodToCall, showType ->
+        Pair(methodToCall, showType)
+    }.flatMapLatest { (methodToCall, showType) ->
+        showRepository.getShows(methodToCall, showType).cachedIn(viewModelScope)
     }
+
+    @ExperimentalCoroutinesApi
+    val shows = showsFlow.asLiveData()
 
 
     private val showEventChannel = Channel<HomeFragmentEvents>()
     val showEvent = showEventChannel.receiveAsFlow()
-
     fun showItemClicked(show: Show) = viewModelScope.launch {
         showEventChannel.send(
             HomeFragmentEvents.NavigateToDetailsFragmentWithShow(
                 show,
-                showType
+                showType.value ?: ShowType.MOVIE
             )
         )
     }

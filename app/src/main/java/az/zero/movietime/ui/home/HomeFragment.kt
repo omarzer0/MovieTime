@@ -1,6 +1,7 @@
 package az.zero.movietime.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -31,7 +32,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         binding = FragmentHomeBinding.bind(view)
 
 
-        viewModel.getShows()
         showAdapter = ShowAdapter()
         val gridLayoutManager = GridLayoutManager(requireContext(), 4)
         gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {

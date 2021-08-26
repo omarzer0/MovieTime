@@ -1,9 +1,6 @@
 package az.zero.movietime.ui.details
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import az.zero.movietime.data.Show
@@ -32,14 +29,16 @@ class DetailsViewModel @Inject constructor(
 
     lateinit var similarMovies: LiveData<PagingData<Show>>
     fun getSimilarShows(movieId: Int) {
-        similarMovies = showRepository.getShows(MethodToCall.GET_SIMILAR, showType, movieId)
-            .cachedIn(viewModelScope)
+        similarMovies =
+            showRepository.getShows(MethodToCall.GET_SIMILAR, showType, movieId).asLiveData()
+                .cachedIn(viewModelScope)
     }
 
     lateinit var relatedMovies: LiveData<PagingData<Show>>
     fun getRecommendedShows(movieId: Int) {
-        relatedMovies = showRepository.getShows(MethodToCall.GET_RECOMMENDED, showType, movieId)
-            .cachedIn(viewModelScope)
+        relatedMovies =
+            showRepository.getShows(MethodToCall.GET_RECOMMENDED, showType, movieId).asLiveData()
+                .cachedIn(viewModelScope)
     }
 
     fun showItemClicked(show: Show) = viewModelScope.launch {

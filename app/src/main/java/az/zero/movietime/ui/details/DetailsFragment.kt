@@ -1,7 +1,6 @@
 package az.zero.movietime.ui.details
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment

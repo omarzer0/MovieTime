@@ -17,5 +17,5 @@ class ShowRepository @Inject constructor(
     fun getShows(methodToCall: MethodToCall, showType: ShowType, showId: Int = -1) = Pager(
         config = PagingConfig(pageSize = 20, maxSize = 100, enablePlaceholders = false),
         pagingSourceFactory = { MoviePagingSource(showApi, methodToCall, showType,showId) }
-    ).liveData
+    ).flow
 }
