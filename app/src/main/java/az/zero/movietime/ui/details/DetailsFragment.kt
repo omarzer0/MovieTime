@@ -32,21 +32,17 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
 
         similarAdapter = ShowAdapter()
         relatedAdapter = ShowAdapter()
-        collectEvents()
 
-        val show = viewModel.show
+        val show = viewModel.show.value
 
         if (show != null) {
             populateViews(binding, show)
             setUpSimilarRV(binding)
             setUpRelatedRV(binding)
-
-            viewModel.getSimilarShows(show.id)
-            viewModel.getRecommendedShows(show.id)
-
             observeData()
         }
 
+        collectEvents()
     }
 
     private fun setUpSimilarRV(binding: FragmentDetailsBinding) {
@@ -105,7 +101,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
 
             tvReleaseDate.text = show.fullReleaseDate
             tvIsAdult.text = if (show.adult) "Yes" else "No"
-            tvVotesNumber.text = "${show.vote_count}"
+            tvVotesNumber.text = "${show.voteCount}"
 
             if (show.title == null) {
                 tvAdult.visibility = View.GONE
@@ -124,7 +120,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
                         val action = NavGraphDirections.actionGlobalDetailsFragment(
                             event.show,
                             event.show.showTitle,
-                            event.showType
+                            event.show.showType
                         )
                         findNavController().navigate(action)
                     }

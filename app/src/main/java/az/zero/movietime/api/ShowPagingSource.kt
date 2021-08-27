@@ -3,8 +3,8 @@ package az.zero.movietime.api
 import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import az.zero.movietime.data.Show
 import az.zero.movietime.data.Response
+import az.zero.movietime.data.Show
 import az.zero.movietime.utils.API_KEY
 import az.zero.movietime.utils.MethodToCall
 import az.zero.movietime.utils.ShowType
@@ -16,7 +16,8 @@ class MoviePagingSource(
     private val showApi: ShowApi,
     private val methodToCall: MethodToCall,
     private val showType: ShowType,
-    private val movieId: Int
+    private val movieId: Int,
+    private val searchQuery: String
 ) : PagingSource<Int, Show>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Show> {
@@ -45,6 +46,7 @@ class MoviePagingSource(
                 }
                 MethodToCall.UPCOMING -> showApi.getUpcomingMovies(API_KEY, position)
                 MethodToCall.AIRING_TODAY -> showApi.getAiringTodayTV(API_KEY, position)
+                MethodToCall.SEARCH_SHOW -> showApi.searchForShows(API_KEY, searchQuery, position)
             }.exhaustive
 
             val movies = response.results

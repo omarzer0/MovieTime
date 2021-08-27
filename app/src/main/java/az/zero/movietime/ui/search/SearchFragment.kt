@@ -1,10 +1,11 @@
-package az.zero.movietime.ui.home
+package az.zero.movietime.ui.search
 
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -16,22 +17,21 @@ import az.zero.movietime.NavGraphDirections
 import az.zero.movietime.R
 import az.zero.movietime.adapter.ShowAdapter
 import az.zero.movietime.api.ShowLoadStateAdapter
-import az.zero.movietime.databinding.FragmentHomeBinding
-import az.zero.movietime.utils.LOADING_ITEM
-import az.zero.movietime.utils.NO_INTERNET
-import az.zero.movietime.utils.exhaustive
+import az.zero.movietime.databinding.FragmentSearchBinding
+import az.zero.movietime.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(R.layout.fragment_home) {
-    private val viewModel: HomeFragmentViewModel by viewModels()
-    private lateinit var binding: FragmentHomeBinding
+class SearchFragment : Fragment(R.layout.fragment_search) {
+    private lateinit var binding: FragmentSearchBinding
+    private lateinit var searchView: SearchView
+    private val viewModel: SearchViewModel by viewModels()
     private lateinit var showAdapter: ShowAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentHomeBinding.bind(view)
+        binding = FragmentSearchBinding.bind(view)
 
 
         showAdapter = ShowAdapter()
@@ -44,6 +44,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     else -> -1
                 }
         }
+
         binding.rvShows.apply {
             adapter = showAdapter.withLoadStateFooter(
                 footer = ShowLoadStateAdapter { showAdapter.retry() }
@@ -68,28 +69,55 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             binding.apply {
                 pbProgressBar.isVisible = loadState.source.refresh is LoadState.Loading
                 rvShows.isVisible = loadState.source.refresh is LoadState.NotLoading
-                buttonRetry.isVisible = loadState.source.refresh is LoadState.Error
-                textViewError.isVisible = loadState.source.refresh is LoadState.Error
+                buttonRetry.isVisible =
+                    loadState.source.refresh is LoadState.Error
+                textViewError.isVisible =
+                    loadState.source.refresh is LoadState.Error
 
-                if (loadState.source.refresh is LoadState.NotLoading &&
-                    loadState.append.endOfPaginationReached &&
-                    showAdapter.itemCount < 1
+                if (loadState.source.refresh is LoadState.NotLoading
+                    && loadState.append.endOfPaginationReached
+                    && showAdapter.itemCount < 1
                 ) {
                     rvShows.isVisible = false
                 }
             }
         }
 
-
-        collectEvents()
         setHasOptionsMenu(true)
+        collectEvents()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.search_fragment_menu, menu)
+
+        val searchItem = menu.findItem(R.id.action_search)
+        searchView = searchItem.actionView as SearchView
+
+        searchItem.expandActionView()
+        val pendingQuery = viewModel.searchQuery.value
+        if (pendingQuery != null && pendingQuery.isNotEmpty() && pendingQuery != START_SEARCH_QUERY) {
+            searchView.setQuery(pendingQuery, false)
+        }
+
+        searchItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
+            override fun onMenuItemActionExpand(item: MenuItem?): Boolean = true
+            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                findNavController().navigateUp()
+                return true
+            }
+        })
+
+        searchView.onQueryTextChanged { text ->
+            if (text == "") viewModel.searchQuery.value = START_SEARCH_QUERY
+            else viewModel.searchQuery.value = text
+        }
     }
 
     private fun collectEvents() {
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
             viewModel.showEvent.collect { event ->
                 when (event) {
-                    is HomeFragmentEvents.NavigateToDetailsFragmentWithShow -> {
+                    is SearchFragmentEvents.NavigateToDetailsFragmentWithShow -> {
                         val action = NavGraphDirections.actionGlobalDetailsFragment(
                             event.show,
                             event.show.showTitle,
@@ -102,17 +130,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.home_fragment_menu, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
-        R.id.action_search -> {
-            val action = HomeFragmentDirections.actionHomeFragmentToSearchFragment()
-            findNavController().navigate(action)
-            true
-        }
-
-        else -> super.onOptionsItemSelected(item)
+    override fun onDestroyView() {
+        super.onDestroyView()
+        searchView.setOnQueryTextListener(null)
     }
 }

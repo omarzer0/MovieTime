@@ -43,8 +43,7 @@ class HomeFragmentViewModel @Inject constructor(
     fun showItemClicked(show: Show) = viewModelScope.launch {
         showEventChannel.send(
             HomeFragmentEvents.NavigateToDetailsFragmentWithShow(
-                show,
-                showType.value ?: ShowType.MOVIE
+                show
             )
         )
     }

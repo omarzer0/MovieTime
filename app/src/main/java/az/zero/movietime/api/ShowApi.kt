@@ -57,6 +57,13 @@ interface ShowApi {
         @Query("api_key") api_key: String,
         @Query("page") page: Int
     ): Response
+
+    @GET("search/multi")
+    suspend fun searchForShows(
+        @Query("api_key") api_key: String,
+        @Query("query") query: String,
+        @Query("page") page: Int
+    ): Response
 }
 
 // https://api.themoviedb.org/3/movie/150689/recommendations?api_key=49066942591aa4286806177d1fc935a0&page=1
