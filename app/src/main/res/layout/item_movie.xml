@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cv_root"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="8dp"
+    android:layout_marginBottom="16dp"
+    app:cardBackgroundColor="@color/card_bg_color"
+    app:cardCornerRadius="2dp"
+    app:cardElevation="8dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <ImageView
+            android:id="@+id/iv_movie_poster"
+            android:layout_width="80dp"
+            android:layout_height="120dp"
+            android:scaleType="fitXY"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@tools:sample/avatars" />
+
+
+        <TextView
+            android:id="@+id/tv_movie_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/text_main_color"
+            android:textSize="13sp"
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="2dp"
+            app:layout_constraintEnd_toEndOf="@+id/iv_movie_poster"
+            app:layout_constraintStart_toStartOf="@+id/iv_movie_poster"
+            app:layout_constraintTop_toBottomOf="@+id/iv_movie_poster"
+            tools:text="NAMED ADS DASD ASD ASD ASD ASD ASD SAD " />
+
+        <TextView
+            android:id="@+id/tv_release_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="12sp"
+            android:textColor="@color/text_secondary_color"
+            app:layout_constraintEnd_toStartOf="@+id/rb_rating_star_image"
+            app:layout_constraintStart_toStartOf="@+id/tv_movie_name"
+            app:layout_constraintTop_toBottomOf="@+id/tv_movie_name"
+            tools:text="2010" />
+
+
+        <TextView
+            android:id="@+id/tv_rating_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="12sp"
+            android:textColor="@color/text_secondary_color"
+            app:layout_constraintEnd_toEndOf="@+id/tv_movie_name"
+            app:layout_constraintTop_toBottomOf="@+id/tv_movie_name"
+            tools:text="9.99" />
+
+        <ImageView
+            android:id="@+id/rb_rating_star_image"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:src="@drawable/ic_star"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_rating_number"
+            app:layout_constraintEnd_toStartOf="@+id/tv_rating_number"
+            app:layout_constraintTop_toBottomOf="@+id/tv_movie_name" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>
