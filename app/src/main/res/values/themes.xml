@@ -13,5 +13,14 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
         <item name="android:navigationBarColor">@color/app_main_color</item>
+
+        <item name="android:listDivider">@color/text_secondary_color</item>
+        <item name="itemBackground">@drawable/drawer_selected_item_bg</item>
+
+    </style>
+
+    <style name="NavigationView" >
+        <item name="android:textColor">@color/text_secondary_color</item>
+        <item name="itemBackground">@drawable/drawer_selected_item_bg</item>
     </style>
 </resources>

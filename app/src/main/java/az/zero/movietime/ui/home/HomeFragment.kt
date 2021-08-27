@@ -1,6 +1,7 @@
 package az.zero.movietime.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -11,8 +12,8 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import az.zero.movietime.NavGraphDirections
 import az.zero.movietime.R
-import az.zero.movietime.adapter.MovieAdapter
-import az.zero.movietime.api.MovieLoadStateAdapter
+import az.zero.movietime.adapter.ShowAdapter
+import az.zero.movietime.api.ShowLoadStateAdapter
 import az.zero.movietime.databinding.FragmentHomeBinding
 import az.zero.movietime.utils.LOADING_ITEM
 import az.zero.movietime.utils.NO_INTERNET
@@ -24,71 +25,72 @@ import kotlinx.coroutines.flow.collect
 class HomeFragment : Fragment(R.layout.fragment_home) {
     private val viewModel: HomeFragmentViewModel by viewModels()
     private lateinit var binding: FragmentHomeBinding
-    private lateinit var movieAdapter: MovieAdapter
+    private lateinit var showAdapter: ShowAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentHomeBinding.bind(view)
 
 
-        movieAdapter = MovieAdapter()
+        showAdapter = ShowAdapter()
         val gridLayoutManager = GridLayoutManager(requireContext(), 4)
         gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int =
-                when (movieAdapter.getItemViewType(position)) {
+                when (showAdapter.getItemViewType(position)) {
                     LOADING_ITEM -> 4
                     NO_INTERNET -> 1
                     else -> -1
                 }
         }
-        binding.rvMovies.apply {
-            adapter = movieAdapter.withLoadStateFooter(
-                footer = MovieLoadStateAdapter { movieAdapter.retry() }
+        binding.rvShows.apply {
+            adapter = showAdapter.withLoadStateFooter(
+                footer = ShowLoadStateAdapter { showAdapter.retry() }
             )
 
             itemAnimator = null
             layoutManager = gridLayoutManager
 
         }
-        binding.buttonRetry.setOnClickListener { movieAdapter.retry() }
+        binding.buttonRetry.setOnClickListener { showAdapter.retry() }
 
 
-        viewModel.movies.observe(viewLifecycleOwner) { movies ->
-            movieAdapter.submitData(viewLifecycleOwner.lifecycle, movies)
+        viewModel.shows.observe(viewLifecycleOwner) { shows ->
+            showAdapter.submitData(viewLifecycleOwner.lifecycle, shows)
         }
 
-        movieAdapter.setOnMovieClickListener { movie ->
-            viewModel.movieItemClicked(movie)
+        showAdapter.setOnShowClickListener { shows ->
+            viewModel.showItemClicked(shows)
         }
 
-        movieAdapter.addLoadStateListener { loadState ->
+        showAdapter.addLoadStateListener { loadState ->
             binding.apply {
                 pbProgressBar.isVisible = loadState.source.refresh is LoadState.Loading
-                rvMovies.isVisible = loadState.source.refresh is LoadState.NotLoading
+                rvShows.isVisible = loadState.source.refresh is LoadState.NotLoading
                 buttonRetry.isVisible = loadState.source.refresh is LoadState.Error
                 textViewError.isVisible = loadState.source.refresh is LoadState.Error
 
                 if (loadState.source.refresh is LoadState.NotLoading &&
                     loadState.append.endOfPaginationReached &&
-                    movieAdapter.itemCount < 1
+                    showAdapter.itemCount < 1
                 ) {
-                    rvMovies.isVisible = false
+                    rvShows.isVisible = false
                 }
             }
         }
 
 
-        collectMovieEvents()
+        collectEvents()
     }
 
-    private fun collectMovieEvents() {
+    private fun collectEvents() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.movieEvent.collect { event ->
+            viewModel.showEvent.collect { event ->
                 when (event) {
-                    is HomeFragmentEvents.NavigateToDetailsFragmentWithMovie -> {
+                    is HomeFragmentEvents.NavigateToDetailsFragmentWithShow -> {
                         val action = NavGraphDirections.actionGlobalDetailsFragment(
-                            event.movie,
-                            event.movie.title
+                            event.show,
+                            event.show.showTitle,
+                            event.showType
                         )
                         findNavController().navigate(action)
                     }

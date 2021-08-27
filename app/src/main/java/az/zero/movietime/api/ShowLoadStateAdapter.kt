@@ -8,8 +8,8 @@ import androidx.paging.LoadStateAdapter
 import androidx.recyclerview.widget.RecyclerView
 import az.zero.movietime.databinding.MovieLoadStateFooterBinding
 
-class MovieLoadStateAdapter(private val retry: () -> Unit) :
-    LoadStateAdapter<MovieLoadStateAdapter.LoadStateViewHolder>() {
+class ShowLoadStateAdapter(private val retry: () -> Unit) :
+    LoadStateAdapter<ShowLoadStateAdapter.LoadStateViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, loadState: LoadState): LoadStateViewHolder {
         val binding = MovieLoadStateFooterBinding.inflate(

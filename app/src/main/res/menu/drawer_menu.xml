@@ -1,4 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/movie_menu_item_title"
+            android:title="@string/movies">
+            <menu>
+                <group android:checkableBehavior="single">
+                    <item
+                        android:id="@+id/movie_popular_menu_item"
+                        android:icon="@drawable/ic_person"
+                        android:title="@string/popular" />
+                    <item
+                        android:id="@+id/movie_trending_menu_item"
+                        android:icon="@drawable/ic_person"
+                        android:title="@string/trending" />
+                    <item
+                        android:id="@+id/movie_top_rated_menu_item"
+                        android:icon="@drawable/ic_person"
+                        android:title="@string/top_rated" />
+
+                    <item
+                        android:id="@+id/movie_upcoming_menu_item"
+                        android:icon="@drawable/ic_person"
+                        android:title="@string/upcoming" />
+                </group>
+
+            </menu>
+
+        </item>
+
+        <item
+            android:id="@+id/tv_menu_item_title"
+            android:title="@string/tv">
+            <menu>
+                <group android:checkableBehavior="single">
+                    <item
+                        android:id="@+id/tv_popular_menu_item"
+                        android:icon="@drawable/ic_person"
+                        android:title="@string/popular" />
+                    <item
+                        android:id="@+id/tv_trending_menu_item"
+                        android:icon="@drawable/ic_person"
+                        android:title="@string/trending" />
+                    <item
+                        android:id="@+id/tv_top_rated_menu_item"
+                        android:icon="@drawable/ic_person"
+                        android:title="@string/top_rated" />
+
+                    <item
+                        android:id="@+id/tv_airing_today_menu_item"
+                        android:icon="@drawable/ic_person"
+                        android:title="@string/airing_today" />
+                </group>
+
+            </menu>
+        </item>
+    </group>
+
 
 </menu>

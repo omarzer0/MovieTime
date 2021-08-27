@@ -1,37 +1,51 @@
 package az.zero.movietime.ui.home
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
+import androidx.lifecycle.*
 import androidx.paging.cachedIn
-import az.zero.movietime.data.Movie
-import az.zero.movietime.repository.MovieRepository
+import az.zero.movietime.data.Show
+import az.zero.movietime.repository.ShowRepository
+import az.zero.movietime.utils.METHOD_TO_CALL
+import az.zero.movietime.utils.MethodToCall
+import az.zero.movietime.utils.SHOW_TYPE
+import az.zero.movietime.utils.ShowType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeFragmentViewModel @Inject constructor(private val movieRepository: MovieRepository) :
+class HomeFragmentViewModel @Inject constructor(
+    private val showRepository: ShowRepository,
+    private val state: SavedStateHandle
+) :
     ViewModel() {
 
-    init {
-        getMovies()
+    private val methodToCall = state.getLiveData(METHOD_TO_CALL, MethodToCall.GET_POPULAR)
+    private val showType = state.getLiveData(SHOW_TYPE, ShowType.MOVIE)
+
+    @ExperimentalCoroutinesApi
+    val showsFlow = combine(methodToCall.asFlow(), showType.asFlow()) { methodToCall, showType ->
+        Pair(methodToCall, showType)
+    }.flatMapLatest { (methodToCall, showType) ->
+        showRepository.getShows(methodToCall, showType).cachedIn(viewModelScope)
     }
 
-    //val movies = movieRepository.getPopularMovies().cachedIn(viewModelScope)
-    lateinit var movies: LiveData<PagingData<Movie>>
-    private fun getMovies() {
-        movies = movieRepository.getPopularMovies().cachedIn(viewModelScope)
-    }
+    @ExperimentalCoroutinesApi
+    val shows = showsFlow.asLiveData()
 
 
-    private val movieEventChannel = Channel<HomeFragmentEvents>()
-    val movieEvent = movieEventChannel.receiveAsFlow()
-
-    fun movieItemClicked(movie: Movie) = viewModelScope.launch {
-        movieEventChannel.send(HomeFragmentEvents.NavigateToDetailsFragmentWithMovie(movie))
+    private val showEventChannel = Channel<HomeFragmentEvents>()
+    val showEvent = showEventChannel.receiveAsFlow()
+    fun showItemClicked(show: Show) = viewModelScope.launch {
+        showEventChannel.send(
+            HomeFragmentEvents.NavigateToDetailsFragmentWithShow(
+                show,
+                showType.value ?: ShowType.MOVIE
+            )
+        )
     }
 }

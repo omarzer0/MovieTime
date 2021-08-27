@@ -9,8 +9,12 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import az.zero.movietime.NavGraphDirections
 import az.zero.movietime.R
 import az.zero.movietime.databinding.ActivityMainBinding
+import az.zero.movietime.utils.MethodToCall
+import az.zero.movietime.utils.ShowType
+import az.zero.movietime.utils.changeTitleTextStyle
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
@@ -36,7 +40,76 @@ class MainActivity : AppCompatActivity() {
 
         setupActionBarWithNavController(navController, appBarrConfiguration)
         binding.navDrawerSlider.setupWithNavController(navController)
+
+        binding.navDrawerSlider.setCheckedItem(R.id.movie_popular_menu_item)
+        binding.navDrawerSlider.setNavigationItemSelectedListener { menuItem ->
+            val showType: ShowType
+            val methodToCall: MethodToCall
+            when (menuItem.itemId) {
+                R.id.movie_upcoming_menu_item -> {
+                    showType = ShowType.MOVIE
+                    methodToCall = MethodToCall.UPCOMING
+                }
+
+                R.id.movie_trending_menu_item -> {
+                    showType = ShowType.MOVIE
+                    methodToCall = MethodToCall.TRENDING
+                }
+
+                R.id.movie_top_rated_menu_item -> {
+                    showType = ShowType.MOVIE
+                    methodToCall = MethodToCall.TOP_RATED
+                }
+
+                // ---------------------------------------------
+                R.id.tv_airing_today_menu_item -> {
+                    showType = ShowType.TV
+                    methodToCall = MethodToCall.AIRING_TODAY
+                }
+
+                R.id.tv_trending_menu_item -> {
+                    showType = ShowType.TV
+                    methodToCall = MethodToCall.TRENDING
+                }
+
+                R.id.tv_top_rated_menu_item -> {
+                    showType = ShowType.TV
+                    methodToCall = MethodToCall.TOP_RATED
+                }
+
+                R.id.tv_popular_menu_item -> {
+                    showType = ShowType.TV
+                    methodToCall = MethodToCall.GET_POPULAR
+                }
+
+
+                else -> {
+                    showType = ShowType.MOVIE
+                    methodToCall = MethodToCall.GET_POPULAR
+                }
+            }
+
+            val action = NavGraphDirections.actionGlobalHomeFragment(
+                showType,
+                methodToCall
+            )
+            navController.navigate(action)
+
+            menuItem.isChecked = true
+            binding.drawerLayout.close()
+            true
+        }
+
+
+        val menu = binding.navDrawerSlider.menu
+        val movieItemTitle = menu.findItem(R.id.movie_menu_item_title)
+        movieItemTitle.title = changeTitleTextStyle(movieItemTitle, this, R.style.NavigationView)
+
+        val tvItemTitle = menu.findItem(R.id.tv_menu_item_title)
+        tvItemTitle.title = changeTitleTextStyle(tvItemTitle, this, R.style.NavigationView)
+
     }
+
 
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp(appBarrConfiguration) || super.onSupportNavigateUp()

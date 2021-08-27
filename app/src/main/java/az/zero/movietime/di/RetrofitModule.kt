@@ -1,6 +1,6 @@
 package az.zero.movietime.di
 
-import az.zero.movietime.api.MovieApi
+import az.zero.movietime.api.ShowApi
 import az.zero.movietime.utils.BASE_URL
 import dagger.Module
 import dagger.Provides
@@ -26,8 +26,8 @@ object RetrofitModule {
 
         @Singleton
         @Provides
-        fun provideMoveApi(retrofit: Retrofit): MovieApi =
-            retrofit.create(MovieApi::class.java)
+        fun provideMoveApi(retrofit: Retrofit): ShowApi =
+            retrofit.create(ShowApi::class.java)
     }
 
 

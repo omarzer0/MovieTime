@@ -12,7 +12,7 @@ android {
     buildToolsVersion rootProject.buildToolsVersion
 
     defaultConfig {
-        applicationId "az.zero.movietime"
+        applicationId "az.zero.showtime"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
         versionCode 1
@@ -91,6 +91,10 @@ dependencies {
 
     // Paging 3
     implementation "androidx.paging:paging-runtime-ktx:$pagingVersion"
+
+    // Circular ImageView
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
 
 }
 
