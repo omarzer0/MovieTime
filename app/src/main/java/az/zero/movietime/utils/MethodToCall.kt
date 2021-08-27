@@ -7,5 +7,6 @@ enum class MethodToCall {
     UPCOMING,
     AIRING_TODAY,
     GET_SIMILAR,
-    GET_RECOMMENDED
+    GET_RECOMMENDED,
+    SEARCH_SHOW
 }
