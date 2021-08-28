@@ -11,8 +11,6 @@ import az.zero.movietime.utils.ShowType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,15 +25,10 @@ class HomeFragmentViewModel @Inject constructor(
     private val methodToCall = state.getLiveData(METHOD_TO_CALL, MethodToCall.GET_POPULAR)
     private val showType = state.getLiveData(SHOW_TYPE, ShowType.MOVIE)
 
-    @ExperimentalCoroutinesApi
-    val showsFlow = combine(methodToCall.asFlow(), showType.asFlow()) { methodToCall, showType ->
-        Pair(methodToCall, showType)
-    }.flatMapLatest { (methodToCall, showType) ->
-        showRepository.getShows(methodToCall, showType).cachedIn(viewModelScope)
+    val shows = methodToCall.switchMap {
+        showRepository.getShows(it, showType.value ?: ShowType.MOVIE).asLiveData()
+            .cachedIn(viewModelScope)
     }
-
-    @ExperimentalCoroutinesApi
-    val shows = showsFlow.asLiveData()
 
 
     private val showEventChannel = Channel<HomeFragmentEvents>()
