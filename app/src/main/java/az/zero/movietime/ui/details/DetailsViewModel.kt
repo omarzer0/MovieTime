@@ -10,7 +10,6 @@ import az.zero.movietime.utils.SHOW_TYPE
 import az.zero.movietime.utils.ShowType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,20 +21,18 @@ class DetailsViewModel @Inject constructor(
 ) : ViewModel() {
 
     var show = state.getLiveData<Show>(SHOW)
-    var showType = state.getLiveData<ShowType>(SHOW_TYPE, ShowType.MOVIE)
+    var showType = state.getLiveData(SHOW_TYPE, ShowType.MOVIE)
 
-    private val similarMoviesFlow = showType.asFlow().flatMapLatest { showType ->
+    val similarMovies = showType.switchMap { showType ->
         showRepository.getShows(MethodToCall.GET_SIMILAR, showType, show.value?.id ?: -1)
-            .cachedIn(viewModelScope)
+            .asLiveData().cachedIn(viewModelScope)
     }
 
-    val similarMovies = similarMoviesFlow.asLiveData()
-
-    private val relatedMoviesFlow = showType.asFlow().flatMapLatest { showType ->
+    val relatedMovies = showType.switchMap { showType ->
         showRepository.getShows(MethodToCall.GET_RECOMMENDED, showType, show.value?.id ?: -1)
-            .cachedIn(viewModelScope)
+            .asLiveData().cachedIn(viewModelScope)
     }
-    val relatedMovies = relatedMoviesFlow.asLiveData()
+
 
     private val showEventChannel = Channel<DetailsFragmentEvents>()
     val showEvent = showEventChannel.receiveAsFlow()

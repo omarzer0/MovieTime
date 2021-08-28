@@ -24,7 +24,6 @@ class MoviePagingSource(
         val position = params.key ?: STARTING_PAGE_NUMBER
 
         return try {
-            //val response = movieApi.getPopularMovies(API_KEY, position)
             val response: Response = when (methodToCall) {
                 MethodToCall.GET_POPULAR -> showApi.getPopularShows(show, API_KEY, position)
                 MethodToCall.TOP_RATED -> showApi.getTopRatedShows(show, API_KEY, position)
@@ -36,7 +35,6 @@ class MoviePagingSource(
                     position
                 )
                 MethodToCall.GET_RECOMMENDED -> {
-                    Log.e("TAG", "load: get rec $show $movieId")
                     showApi.getRecommendedShows(
                         show,
                         movieId,

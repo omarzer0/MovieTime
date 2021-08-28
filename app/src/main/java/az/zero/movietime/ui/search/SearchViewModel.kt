@@ -24,12 +24,10 @@ class SearchViewModel @Inject constructor(
 
     val searchQuery = state.getLiveData(SEARCH_QUERY, START_SEARCH_QUERY)
 
-    private val showFlow = searchQuery.asFlow().flatMapLatest { query ->
+    val shows = searchQuery.switchMap { query ->
         showRepository.getShows(methodToCall = MethodToCall.SEARCH_SHOW, searchQuery = query)
-            .cachedIn(viewModelScope)
+            .asLiveData().cachedIn(viewModelScope)
     }
-
-    val shows = showFlow.asLiveData()
 
     private val showEventChannel = Channel<SearchFragmentEvents>()
     val showEvent = showEventChannel.receiveAsFlow()
