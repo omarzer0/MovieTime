@@ -11,20 +11,20 @@
                 <group android:checkableBehavior="single">
                     <item
                         android:id="@+id/movie_popular_menu_item"
-                        android:icon="@drawable/ic_person"
+                        android:icon="@drawable/ic_new"
                         android:title="@string/popular" />
                     <item
                         android:id="@+id/movie_trending_menu_item"
-                        android:icon="@drawable/ic_person"
+                        android:icon="@drawable/ic_trend"
                         android:title="@string/trending" />
                     <item
                         android:id="@+id/movie_top_rated_menu_item"
-                        android:icon="@drawable/ic_person"
+                        android:icon="@drawable/ic_rate"
                         android:title="@string/top_rated" />
 
                     <item
                         android:id="@+id/movie_upcoming_menu_item"
-                        android:icon="@drawable/ic_person"
+                        android:icon="@drawable/ic_playing"
                         android:title="@string/upcoming" />
                 </group>
 
@@ -39,20 +39,20 @@
                 <group android:checkableBehavior="single">
                     <item
                         android:id="@+id/tv_popular_menu_item"
-                        android:icon="@drawable/ic_person"
+                        android:icon="@drawable/ic_new"
                         android:title="@string/popular" />
                     <item
                         android:id="@+id/tv_trending_menu_item"
-                        android:icon="@drawable/ic_person"
+                        android:icon="@drawable/ic_trend"
                         android:title="@string/trending" />
                     <item
                         android:id="@+id/tv_top_rated_menu_item"
-                        android:icon="@drawable/ic_person"
+                        android:icon="@drawable/ic_rate"
                         android:title="@string/top_rated" />
 
                     <item
                         android:id="@+id/tv_airing_today_menu_item"
-                        android:icon="@drawable/ic_person"
+                        android:icon="@drawable/ic_playing"
                         android:title="@string/airing_today" />
                 </group>
 
