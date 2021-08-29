@@ -1,6 +1,5 @@
 package az.zero.movietime.api
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import az.zero.movietime.data.Response
@@ -59,7 +58,12 @@ class MoviePagingSource(
 
     }
 
-    override fun getRefreshKey(state: PagingState<Int, Show>): Int? = state.anchorPosition
+    override fun getRefreshKey(state: PagingState<Int, Show>): Int? {
+        return state.anchorPosition?.let { anchorPosition ->
+            state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
+                ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
+        }
+    }
 
     private val show = if (showType == ShowType.TV) "tv" else "movie"
 

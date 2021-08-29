@@ -1,12 +1,15 @@
 package az.zero.movietime.data
 
 import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import az.zero.movietime.utils.ShowType
 import az.zero.movietime.utils.UNKNOWN
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 import java.text.DecimalFormat
 
+@Entity(tableName = "shows_table")
 @Parcelize
 data class Show(
     @SerializedName("poster_path") val poster_path: String?,
@@ -14,6 +17,7 @@ data class Show(
     @SerializedName("overview") val overview: String?,
     @SerializedName("release_date") val release_date: String?,
     @SerializedName("first_air_date") val first_air_date: String?,
+    @PrimaryKey(autoGenerate = false)
     @SerializedName("id") val id: Int,
     @SerializedName("title") val title: String?,
     @SerializedName("name") val name: String?,
