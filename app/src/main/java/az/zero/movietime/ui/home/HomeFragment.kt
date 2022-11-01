@@ -14,9 +14,9 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import az.zero.movietime.NavGraphDirections
 import az.zero.movietime.R
-import az.zero.movietime.adapter.ShowAdapter
 import az.zero.movietime.api.ShowLoadStateAdapter
 import az.zero.movietime.databinding.FragmentHomeBinding
+import az.zero.movietime.ui.adapter.ShowAdapter
 import az.zero.movietime.utils.LOADING_ITEM
 import az.zero.movietime.utils.NO_INTERNET
 import az.zero.movietime.utils.exhaustive
@@ -27,14 +27,12 @@ import kotlinx.coroutines.flow.collect
 class HomeFragment : Fragment(R.layout.fragment_home) {
     private val viewModel: HomeFragmentViewModel by viewModels()
     private lateinit var binding: FragmentHomeBinding
-    private lateinit var showAdapter: ShowAdapter
+    private val showAdapter = ShowAdapter(onShowClick = { viewModel.showItemClicked(it) })
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentHomeBinding.bind(view)
 
-
-        showAdapter = ShowAdapter()
         val gridLayoutManager = GridLayoutManager(requireContext(), 4)
         gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int =
@@ -58,10 +56,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         viewModel.shows.observe(viewLifecycleOwner) { shows ->
             showAdapter.submitData(viewLifecycleOwner.lifecycle, shows)
-        }
-
-        showAdapter.setOnShowClickListener { shows ->
-            viewModel.showItemClicked(shows)
         }
 
         showAdapter.addLoadStateListener { loadState ->

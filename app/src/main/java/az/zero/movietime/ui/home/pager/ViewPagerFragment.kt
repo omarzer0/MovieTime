@@ -5,7 +5,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import az.zero.movietime.R
-import az.zero.movietime.adapter.ShowAdapter
+import az.zero.movietime.ui.adapter.ShowAdapter
 import az.zero.movietime.databinding.FragmentViewPagerBinding
 import az.zero.movietime.ui.home.HomeFragmentViewModel
 import az.zero.movietime.utils.TAB_NUMBER

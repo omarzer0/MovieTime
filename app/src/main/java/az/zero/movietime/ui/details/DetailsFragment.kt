@@ -9,9 +9,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import az.zero.movietime.NavGraphDirections
 import az.zero.movietime.R
-import az.zero.movietime.adapter.ShowAdapter
 import az.zero.movietime.data.Show
 import az.zero.movietime.databinding.FragmentDetailsBinding
+import az.zero.movietime.ui.adapter.ShowHorizontalAdapter
 import az.zero.movietime.utils.exhaustive
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,16 +22,17 @@ import kotlinx.coroutines.flow.collect
 class DetailsFragment : Fragment(R.layout.fragment_details) {
     private val viewModel: DetailsViewModel by viewModels()
     private lateinit var binding: FragmentDetailsBinding
-    private lateinit var similarAdapter: ShowAdapter
-    private lateinit var relatedAdapter: ShowAdapter
+
+    private val similarAdapter =
+        ShowHorizontalAdapter(onShowClick = { viewModel.showItemClicked(it) })
+
+    private val relatedAdapter =
+        ShowHorizontalAdapter(onShowClick = { viewModel.showItemClicked(it) })
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentDetailsBinding.bind(view)
-
-        similarAdapter = ShowAdapter()
-        relatedAdapter = ShowAdapter()
 
         val show = viewModel.show.value
 
@@ -50,10 +51,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
             adapter = similarAdapter
         }
 
-        similarAdapter.setOnShowClickListener { movie ->
-            viewModel.showItemClicked(movie)
-        }
-
         similarAdapter.addLoadStateListener { loadState ->
             val showOrHide = similarAdapter.itemCount >= 1
             binding.rvSimilar.isVisible = showOrHide
@@ -66,10 +63,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
 
         binding.rvRelated.apply {
             adapter = relatedAdapter
-        }
-
-        relatedAdapter.setOnShowClickListener { movie ->
-            viewModel.showItemClicked(movie)
         }
 
         relatedAdapter.addLoadStateListener { loadState ->

@@ -1,4 +1,4 @@
-package az.zero.movietime.adapter
+package az.zero.movietime.ui.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity

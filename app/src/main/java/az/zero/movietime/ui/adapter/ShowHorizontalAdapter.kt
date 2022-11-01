@@ -1,4 +1,4 @@
-package az.zero.movietime.adapter
+package az.zero.movietime.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,18 +6,19 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import az.zero.movietime.data.Show
-import az.zero.movietime.databinding.ItemMovieBinding
+import az.zero.movietime.databinding.ItemMovieHorizontalBinding
 import az.zero.movietime.utils.LOADING_ITEM
 import az.zero.movietime.utils.NO_INTERNET
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 
-class ShowAdapter : PagingDataAdapter<Show, ShowAdapter.ShowViewHolder>(COMPARATOR) {
+class ShowHorizontalAdapter(
+    private val onShowClick: (Show) -> Unit
+) : PagingDataAdapter<Show, ShowHorizontalAdapter.ShowViewHolder>(COMPARATOR) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShowViewHolder {
-        val binding = ItemMovieBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent, false
+        val binding = ItemMovieHorizontalBinding.inflate(
+            LayoutInflater.from(parent.context), parent, false
         )
         return ShowViewHolder(binding)
     }
@@ -27,13 +28,13 @@ class ShowAdapter : PagingDataAdapter<Show, ShowAdapter.ShowViewHolder>(COMPARAT
         if (currentItem != null) holder.bind(currentItem)
     }
 
-    inner class ShowViewHolder(private val binding: ItemMovieBinding) :
+    inner class ShowViewHolder(private val binding: ItemMovieHorizontalBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         init {
             binding.root.setOnClickListener {
                 val clickedShow = getItem(bindingAdapterPosition)
-                clickedShow?.let { onShowClickListener?.let { it(clickedShow) } }
+                clickedShow?.let { onShowClick(clickedShow) }
             }
         }
 
@@ -43,25 +44,17 @@ class ShowAdapter : PagingDataAdapter<Show, ShowAdapter.ShowViewHolder>(COMPARAT
                 tvReleaseDate.text = currentItem.getTheYearOfReleaseDateYear()
                 tvRatingNumber.text = "${currentItem.voteAverageWithOneDecimalPlace}"
                 Glide.with(itemView).load(currentItem.showPoster)
-                    .transition(DrawableTransitionOptions.withCrossFade())
-                    .into(ivMoviePoster)
+                    .transition(DrawableTransitionOptions.withCrossFade()).into(ivMoviePoster)
             }
         }
 
     }
 
-    private var onShowClickListener: ((Show) -> Unit)? = null
-    fun setOnShowClickListener(listener: (Show) -> Unit) {
-        onShowClickListener = listener
-    }
-
     companion object {
         private val COMPARATOR = object : DiffUtil.ItemCallback<Show>() {
-            override fun areItemsTheSame(oldItem: Show, newItem: Show) =
-                oldItem.id == newItem.id
+            override fun areItemsTheSame(oldItem: Show, newItem: Show) = oldItem.id == newItem.id
 
-            override fun areContentsTheSame(oldItem: Show, newItem: Show) =
-                oldItem == newItem
+            override fun areContentsTheSame(oldItem: Show, newItem: Show) = oldItem == newItem
         }
     }
 

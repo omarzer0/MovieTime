@@ -15,9 +15,9 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import az.zero.movietime.NavGraphDirections
 import az.zero.movietime.R
-import az.zero.movietime.adapter.ShowAdapter
 import az.zero.movietime.api.ShowLoadStateAdapter
 import az.zero.movietime.databinding.FragmentSearchBinding
+import az.zero.movietime.ui.adapter.ShowAdapter
 import az.zero.movietime.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -27,14 +27,13 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     private lateinit var binding: FragmentSearchBinding
     private lateinit var searchView: SearchView
     private val viewModel: SearchViewModel by viewModels()
-    private lateinit var showAdapter: ShowAdapter
+    private val showAdapter = ShowAdapter(onShowClick = { viewModel.showItemClicked(it) })
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentSearchBinding.bind(view)
 
 
-        showAdapter = ShowAdapter()
         val gridLayoutManager = GridLayoutManager(requireContext(), 4)
         gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int =
@@ -59,10 +58,6 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
 
         viewModel.shows.observe(viewLifecycleOwner) { shows ->
             showAdapter.submitData(viewLifecycleOwner.lifecycle, shows)
-        }
-
-        showAdapter.setOnShowClickListener { shows ->
-            viewModel.showItemClicked(shows)
         }
 
         showAdapter.addLoadStateListener { loadState ->
@@ -94,7 +89,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         searchView = searchItem.actionView as SearchView
 
         searchItem.expandActionView()
-        val pendingQuery = viewModel.searchQuery.value
+        val pendingQuery = viewModel.getCurrentSearchQuery()
         if (pendingQuery != null && pendingQuery.isNotEmpty() && pendingQuery != START_SEARCH_QUERY) {
             searchView.setQuery(pendingQuery, false)
         }
@@ -108,8 +103,10 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         })
 
         searchView.onQueryTextChanged { text ->
-            if (text == "") viewModel.searchQuery.value = START_SEARCH_QUERY
-            else viewModel.searchQuery.value = text
+            viewModel.updateSearchQuery(
+                if (text == "") START_SEARCH_QUERY
+                else text
+            )
         }
     }
 

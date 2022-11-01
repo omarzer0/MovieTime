@@ -5,12 +5,10 @@ import androidx.paging.cachedIn
 import az.zero.movietime.data.Show
 import az.zero.movietime.repository.ShowRepository
 import az.zero.movietime.utils.MethodToCall
-import az.zero.movietime.utils.SEARCH_QUERY
+import az.zero.movietime.utils.SEARCH_QUERY_KEY
 import az.zero.movietime.utils.START_SEARCH_QUERY
-import az.zero.movietime.utils.ShowType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,8 +19,7 @@ class SearchViewModel @Inject constructor(
     private val state: SavedStateHandle
 ) : ViewModel() {
 
-
-    val searchQuery = state.getLiveData(SEARCH_QUERY, START_SEARCH_QUERY)
+    private val searchQuery = state.getLiveData(SEARCH_QUERY_KEY, START_SEARCH_QUERY)
 
     val shows = searchQuery.switchMap { query ->
         showRepository.getShows(methodToCall = MethodToCall.SEARCH_SHOW, searchQuery = query)
@@ -39,4 +36,10 @@ class SearchViewModel @Inject constructor(
             )
         )
     }
+
+    fun updateSearchQuery(newQuery: String) {
+        state[SEARCH_QUERY_KEY] = newQuery
+    }
+
+    fun getCurrentSearchQuery() = searchQuery.value
 }
