@@ -22,7 +22,6 @@ and one side viewModel to fragment communication.
   - Lifecycle - Dispose of observing data when the lifecycle state changes.
   - ViewModel - UI related data holder, lifecycle aware.
   - ViewBinding - Interact with XML views in safeway and avoid findViewById() 
-  - Room - Persistence library that provides an abstraction layer over SQLite database (Used for caching upcomming feature)
   - Navigation Component - Make it easy to navigate between different screens and pass data in type-safe way
 - Architecture
   - MVVM Architecture (View - ViewModel - Model) together with Events that decide what Fragment or Activity should do
