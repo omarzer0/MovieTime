@@ -10,5 +10,6 @@ const val METHOD_TO_CALL = "methodToCall"
 const val UNKNOWN = "UnKnown"
 const val SHOW = "show"
 const val SEARCH_QUERY_KEY = "searchQuery"
-const val START_SEARCH_QUERY = ""
-// create dev branch
+
+// need a start search query to show results when opening the search screen
+const val START_SEARCH_QUERY = "a"
